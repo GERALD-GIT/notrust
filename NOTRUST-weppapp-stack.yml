@@ -1,0 +1,14 @@
+version: 3.8
+services:
+  NOTRUST-WebHello:
+    image: gsr38/nto-hellowebapp
+    ports:
+      - 80:80
+    deploy:
+      mode: replicated
+      replicas: 2
+      
+networks:
+  default:
+    name: NotrustNetwork_Overlay_1300
+    external: true
