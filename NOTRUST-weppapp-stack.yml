@@ -9,12 +9,17 @@ services:
       replicas: 2
     volumes:
      - nfs-www:/var/www/nto
-      
+    networks:
+     - default
+     - backend
+ 
 networks:
   default:
     name: NotrustNetwork_Overlay_1300
     external: true
-    
+  backend:
+    name: Backend-Network
+  
 volumes:
   nfs-www:
     external: true
