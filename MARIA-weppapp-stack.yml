@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  NOTRUST-SQL:
+    image: mariadb
+
+    volumes:
+     - nfs-sql:/var/lib/mysql:nocopy
+    ports: 
+     - "3306:3306"
+    environment:
+       MARIADB_DATABASE: nto
+       MARIADB_USER: maria
+       MARIADB_PASSWORD: maria
+       MARIADB_ROOT_PASSWORD_FILE: /run/secrets/mariadb_root_password
+    secrets:
+      - mariadb_root_password
+      - resetpassword.sql
+
+  ADMINER:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  default:
+    name: NotrustNetwork_Overlay_1300
+    external: true
+    
+volumes:
+  nfs-sql:
+    driver_opts:
+      type: nfs
+      o: addr=nfs.notrust.online,nfsvers=4,nolock,soft,rw
+      device: :/srv/sql
+secrets:
+  mariadb_root_password:
+    external: true
+  resetpassword.sql:
+    external: true
+   
+ 
