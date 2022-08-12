@@ -1,18 +1,32 @@
 version: "3.8"
 services:
   NOTRUST-WebHello:
-    image: gsr38/nto-hellowebapp
+    image: gsr38/nto-hellowebapp:latest
     ports:
       - "80:80"
+      - "443:443"
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
     volumes:
      - nfs-www:/var/www/nto
     networks:
      - default
      - backend
- 
+    secrets:
+     - private_key
+     - ssl_certificate
+     - ssl_certificate_INTERMEDIATE
+
+secrets:
+  private_key:
+      external: true
+  ssl_certificate:
+      external: true
+  ssl_certificate_INTERMEDIATE:
+      external: true
+      
+      
 networks:
   default:
     name: NotrustNetwork_Overlay_1300
@@ -22,4 +36,7 @@ networks:
   
 volumes:
   nfs-www:
-    external: true
+    driver_opts:
+      type: nfs
+      o: addr=192.168.2.10,nfsvers=4,nolock,soft,rw
+      device: :/srv/www
